@@ -5,15 +5,19 @@ import web3 from './web3';
 import inbox from './inbox';
 
 class App extends Component {
+  state = {
+    message: '',
+    accountNumber: '',
+    balance: '',
+    value: '',
 
-  constructor(props){
-    super(props);
-    this.state = {message:'test'};
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     const message = await inbox.methods.message().call();
-    this.setState({ message })
+    const accountNumber = await inbox.options.address;
+    const balance = await web3.eth.getBalance(inbox.options.address);
+    this.setState({ message, accountNumber, balance })
   }
 
 
@@ -21,10 +25,20 @@ class App extends Component {
     return (
 
       <div className="App">
-        <h2>Inbox contract</h2>
-        <h2>Inbox message is {this.state.message}</h2>
+        <h1>Inbox contract</h1>
+        <p>Message is : {this.state.message}<br />
+          Account of deployed contract : {this.state.accountNumber}<br />
+          Account balance of deployed contract : {web3.utils.fromWei(this.state.balance, 'ether')} ether!
+        </p>
+        <hr />
+        <p>
+          <form>
+            Enter message : <input value={this.state.value} onChange={event => this.setState({ value: event.target.value })} /> 
+            <button>Enter</button>
+          </form>   
+        </p>
       </div>
-    );
+        );
   }
 }
 
