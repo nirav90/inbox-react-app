@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import web3 from './web3';
+import inbox from './inbox';
+
+class App extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {message:'test'};
+  }
+
+  async componentDidMount(){
+    const message = await inbox.methods.message().call();
+    this.setState({ message })
+  }
+
+
+  render() {
+    return (
+
+      <div className="App">
+        <h2>Inbox contract</h2>
+        <h2>Inbox message is {this.state.message}</h2>
+      </div>
+    );
+  }
 }
 
 export default App;
